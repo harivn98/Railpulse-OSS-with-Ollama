@@ -208,7 +208,7 @@ Start-Sleep -Seconds 5
 $apiHealthy = $false
 for ($i = 0; $i -lt 10; $i++) {
     try {
-        $resp = Invoke-WebRequest -Uri "http://localhost:8000/health" -Method GET -TimeoutSec 3 -ErrorAction Stop
+        $resp = Invoke-WebRequest -Uri "http://localhost:8000/health" -UseBasicParsing -Method GET -TimeoutSec 3 -ErrorAction Stop
         if ($resp.StatusCode -eq 200) { $apiHealthy = $true; break }
     } catch { }
     Start-Sleep -Seconds 2

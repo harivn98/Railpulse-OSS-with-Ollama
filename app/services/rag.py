@@ -92,7 +92,7 @@ async def retrieve(
             AnomalyEvent.llm_probable_cause,
             AnomalyEvent.severity,
             AnomalyEvent.created_at,
-            text(f"embedding <=> '{vec_literal}'::vector AS distance"),
+            AnomalyEvent.embedding.cosine_distance(query_embedding).label("distance"),
         )
         .where(AnomalyEvent.embedding.isnot(None))
         .order_by(text("distance"))
@@ -124,7 +124,7 @@ async def retrieve(
             MaintenanceNote.author,
             MaintenanceNote.note,
             MaintenanceNote.created_at,
-            text(f"embedding <=> '{vec_literal}'::vector AS distance"),
+            MaintenanceNote.embedding.cosine_distance(query_embedding).label("distance"),
         )
         .where(MaintenanceNote.embedding.isnot(None))
         .order_by(text("distance"))

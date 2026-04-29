@@ -7,6 +7,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import RedirectResponse
 from sqlalchemy import text
 
 from app.database import Base, engine
@@ -68,3 +69,8 @@ app.include_router(qa.router)
 @app.get("/health", tags=["meta"])
 async def health():
     return {"status": "ok", "version": app.version}
+
+
+@app.get("/", include_in_schema=False)
+async def root():
+    return RedirectResponse(url="/docs")

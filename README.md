@@ -38,41 +38,48 @@ POST /qa ──embed question──► pgvector cosine search     │
 
 ## Quick start
 
-### Prerequisites
+### Automated Start (Windows)
 
-- Docker + Docker Compose
-- Ollama installed locally (or use the compose service)
+The easiest way to bootstrap the entire environment (virtual environment, dependencies, PostgreSQL, Ollama models, FastAPI backend, and sensor simulator) is using the provided PowerShell script:
 
-### 1. Pull required Ollama models
+```powershell
+powershell -ExecutionPolicy Bypass -File .\start.ps1
+```
+
+### Manual Start
+
+If you prefer to start services manually, ensure you have **Docker** and **Ollama** installed.
+
+**1. Pull required Ollama models**
 
 ```bash
-ollama pull llama3.1:8b
+ollama pull llama3.2
 ollama pull nomic-embed-text
 ```
 
-### 2. Configure environment
+**2. Configure environment**
 
 ```bash
 cp .env.example .env
-# Edit .env if your Ollama is not on localhost:11434
 ```
 
-### 3. Start services
+**3. Start services**
 
 ```bash
-docker compose up -d postgres ollama
-# Then start the API (development mode with hot reload):
+# Start PostgreSQL via Docker
+docker compose up -d postgres
+
+# Start Ollama locally (if not already running)
+ollama serve
+
+# Start the API (development mode with hot reload):
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 uvicorn app.main:app --reload
 ```
 
-Or run everything in Docker:
-
-```bash
-docker compose up --build
-```
-
-### 4. Run the sensor simulator
+**4. Run the sensor simulator**
 
 ```bash
 python -m simulator.sensor_stream
@@ -146,7 +153,7 @@ All settings are controlled via environment variables (see `.env.example`).
 |---|---|---|
 | `DATABASE_URL` | `postgresql+asyncpg://...` | Async PostgreSQL connection string |
 | `OLLAMA_BASE_URL` | `http://localhost:11434` | Ollama server URL |
-| `OLLAMA_CHAT_MODEL` | `llama3.1:8b` | Model for alert explanation and Q&A |
+| `OLLAMA_CHAT_MODEL` | `llama3.2` | Model for alert explanation and Q&A |
 | `OLLAMA_EMBED_MODEL` | `nomic-embed-text` | Model for vector embeddings |
 | `EMBED_DIM` | `768` | Embedding dimension (must match model output) |
 | `ANOMALY_POLL_INTERVAL` | `30` | Seconds between detection sweeps |
