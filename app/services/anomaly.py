@@ -41,7 +41,7 @@ _SENSOR_TYPES = ["vibration", "temperature", "speed", "axle_load"]
 
 def _make_detector():
     if _USE_DTAI:
-        return DTAIForest(n_estimators=100, random_state=42)
+        return DTAIForest(window_size=10, n_estimators=100, random_state=42)
     return SKForest(n_estimators=100, contamination=0.05, random_state=42)
 
 
